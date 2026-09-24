@@ -1,0 +1,35 @@
+---
+import type { Locale } from '@/i18n/ui';
+import { useTranslations } from '@/i18n/utils';
+import Icon from './Icon.astro';
+
+interface Props {
+  locale: Locale;
+  label: string;
+  before: string;
+  after: string;
+  compact?: boolean;
+}
+const { locale, label, before, after, compact = false } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<figure class:list={['card corner-marks bg-blueprint', compact ? 'p-4' : 'p-5 sm:p-6']}>
+  <figcaption class="label-mono mb-3 flex items-center gap-2">
+    <Icon name="clock" size={14} />
+    {label}
+  </figcaption>
+  <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+    <p class="flex flex-col">
+      <span class="font-mono text-[0.7rem] tracking-widest text-muted uppercase">{t('case.metricBefore')}</span>
+      <span class:list={['font-display font-semibold text-muted line-through decoration-1', compact ? 'text-lg' : 'text-2xl']}>
+        {before}
+      </span>
+    </p>
+    <Icon name="arrow-right" class="text-accent" size={compact ? 18 : 22} />
+    <p class="flex flex-col">
+      <span class="font-mono text-[0.7rem] tracking-widest text-muted uppercase">{t('case.metricAfter')}</span>
+      <span class:list={['font-display font-bold text-accent', compact ? 'text-xl' : 'text-3xl']}>{after}</span>
+    </p>
+  </div>
+</figure>

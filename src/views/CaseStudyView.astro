@@ -1,0 +1,186 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionLabel from '@/components/SectionLabel.astro';
+import ProprietaryBadge from '@/components/ProprietaryBadge.astro';
+import MetricHighlight from '@/components/MetricHighlight.astro';
+import TechTag from '@/components/TechTag.astro';
+import Gallery from '@/components/Gallery.astro';
+import CoverPlaceholder from '@/components/CoverPlaceholder.astro';
+import Icon from '@/components/Icon.astro';
+import type { Locale } from '@/i18n/ui';
+import { localizePath, projectAlternates, projectPath, useTranslations } from '@/i18n/utils';
+import { missingCaseSections, projectSlug, type Project } from '@/lib/projects';
+
+interface Props {
+  locale: Locale;
+  project: Project;
+  prev?: Project;
+  next?: Project;
+}
+const { locale, project, prev, next } = Astro.props;
+const t = useTranslations(locale);
+const { data } = project;
+const slug = projectSlug(project);
+const { Content, headings } = await render(project);
+
+const missing = missingCaseSections(headings, locale);
+if (missing.length) {
+  console.warn(`[estudo de caso] "${project.id}" está sem as seções: ${missing.join(', ')}`);
+}
+
+const facts = [
+  { k: t('case.category'), v: t(`category.${data.category}`) },
+  data.year && { k: t('case.year'), v: data.year },
+  data.role && { k: t('case.role'), v: data.role },
+  data.status && { k: t('case.status'), v: t(`status.${data.status}`) },
+].filter(Boolean) as { k: string; v: string }[];
+
+const hasMedia = data.gallery.length > 0 || data.videos.length > 0;
+// Imagem de preview (Open Graph) do projeto: capa recortada em 1200×630.
+const og = data.cover
+  ? (await getImage({ src: data.cover, width: 1200, height: 630, format: "jpg", fit: "cover" })).src
+  : undefined;
+---
+
+<BaseLayout
+  locale={locale}
+  title={data.title}
+  description={data.summary}
+  current="projects"
+  alternates={projectAlternates(slug)}
+  image={og}
+  imageAlt={data.coverAlt}
+  type="article"
+>
+  <article>
+    <header class="bg-blueprint border-b border-line">
+      <div class="container-page py-10 sm:py-16">
+        <a
+          href={localizePath('projects', locale)}
+          class="group mb-8 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted hover:text-ink"
+        >
+          <Icon name="arrow-left" size={16} class="transition-transform group-hover:-translate-x-0.5" />
+          {t('case.back')}
+        </a>
+
+        <SectionLabel>{t(`category.${data.category}`)}</SectionLabel>
+        <h1 class="mt-3 max-w-4xl text-3xl leading-tight font-bold sm:text-5xl">{data.title}</h1>
+        <p class="mt-5 max-w-3xl text-lg leading-relaxed text-muted sm:text-xl">{data.summary}</p>
+
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          {data.proprietary && <ProprietaryBadge label={t('badge.proprietary')} size="md" />}
+          {
+            data.repo && (
+              <a href={data.repo} target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+                <Icon name="github" size={18} />
+                {t('projects.repo')}
+                <span class="sr-only">{t('a11y.newTab')}</span>
+              </a>
+            )
+          }
+          {
+            data.demo && (
+              <a href={data.demo} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                {t('projects.demo')}
+                <Icon name="arrow-up-right" size={18} />
+                <span class="sr-only">{t('a11y.newTab')}</span>
+              </a>
+            )
+          }
+        </div>
+
+        <dl class="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-4">
+          {
+            facts.map(({ k, v }) => (
+              <div class="bg-surface px-4 py-3">
+                <dt class="font-mono text-[0.7rem] tracking-widest text-muted uppercase">{k}</dt>
+                <dd class="mt-1 text-sm font-medium">{v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </header>
+
+    <div class="container-page py-12 sm:py-16">
+      <div class="mx-auto max-w-4xl">
+        {
+          data.metric && (
+            <div class="mb-10">
+              <MetricHighlight locale={locale} {...data.metric} />
+            </div>
+          )
+        }
+
+        <div class="card mb-14 overflow-hidden">
+          <div class:list={[!data.cover && 'aspect-[16/9]']}>
+            {
+              data.cover ? (
+                <Image
+                  src={data.cover}
+                  alt={data.coverAlt ?? ''}
+                  widths={[640, 960, 1280, 1600]}
+                  sizes="(min-width: 1024px) 896px, 100vw"
+                  loading="eager"
+                  fetchpriority="high"
+                  class="h-auto w-full"
+                />
+              ) : (
+                <CoverPlaceholder category={data.category} title={data.title} />
+              )
+            }
+          </div>
+        </div>
+
+        <div class="prose prose-case max-w-none sm:prose-lg">
+          <Content />
+
+          <h2 id="stack">{t('case.stack')}</h2>
+        </div>
+        <ul class="mt-6 flex flex-wrap gap-2">
+          {data.stack.map((tech) => <li><TechTag class="px-3 py-1 text-sm text-ink">{tech}</TechTag></li>)}
+        </ul>
+
+        {
+          hasMedia && (
+            <section aria-labelledby="galeria" class="mt-16 border-t border-line pt-8">
+              <h2 id="galeria" class="mb-6 text-2xl font-semibold">{t('case.gallery')}</h2>
+              <Gallery images={data.gallery} videos={data.videos} />
+            </section>
+          )
+        }
+      </div>
+    </div>
+  </article>
+
+  {
+    (prev || next) && (
+      <nav aria-label={t('nav.projects')} class="container-page">
+        <div class="mx-auto grid max-w-4xl gap-4 border-t border-line pt-10 sm:grid-cols-2">
+          {prev ? (
+            <a href={projectPath(projectSlug(prev), locale)} class="card group p-5 transition-colors hover:border-accent">
+              <span class="label-mono flex items-center gap-1.5">
+                <Icon name="arrow-left" size={14} />
+                {t('case.prev')}
+              </span>
+              <span class="mt-2 block font-display font-semibold group-hover:text-accent">{prev.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )}
+          {next && (
+            <a href={projectPath(projectSlug(next), locale)} class="card group p-5 text-right transition-colors hover:border-accent">
+              <span class="label-mono flex items-center justify-end gap-1.5">
+                {t('case.next')}
+                <Icon name="arrow-right" size={14} />
+              </span>
+              <span class="mt-2 block font-display font-semibold group-hover:text-accent">{next.data.title}</span>
+            </a>
+          )}
+        </div>
+      </nav>
+    )
+  }
+</BaseLayout>

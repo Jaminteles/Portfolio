@@ -1,0 +1,52 @@
+---
+import type { Locale } from '@/i18n/ui';
+import { useTranslations } from '@/i18n/utils';
+import { SITE } from '@/data/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-line">
+  <div class="container-page flex flex-col gap-6 py-10 sm:flex-row sm:items-center sm:justify-between">
+    <div class="space-y-1 text-sm text-muted">
+      <p>© {year} {SITE.name}. {t('footer.rights')}</p>
+      <p class="font-mono text-xs">{t('footer.built')}</p>
+    </div>
+    <ul class="flex items-center gap-1">
+      <li>
+        <a
+          href={SITE.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex size-11 items-center justify-center rounded-md text-muted transition-colors hover:text-accent"
+        >
+          <Icon name="github" label={`GitHub ${t('a11y.newTab')}`} />
+        </a>
+      </li>
+      <li>
+        <a
+          href={SITE.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex size-11 items-center justify-center rounded-md text-muted transition-colors hover:text-accent"
+        >
+          <Icon name="linkedin" label={`LinkedIn ${t('a11y.newTab')}`} />
+        </a>
+      </li>
+      <li>
+        <a
+          href={`mailto:${SITE.email}`}
+          class="inline-flex size-11 items-center justify-center rounded-md text-muted transition-colors hover:text-accent"
+        >
+          <Icon name="mail" label={`E-mail: ${SITE.email}`} />
+        </a>
+      </li>
+    </ul>
+  </div>
+</footer>

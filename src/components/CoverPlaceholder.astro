@@ -1,0 +1,23 @@
+---
+/**
+ * Capa provisória para projetos sem imagem: uma "prancha" com carimbo.
+ * Some automaticamente quando você define `cover` no frontmatter.
+ */
+import ContourBackground from './ContourBackground.astro';
+
+interface Props {
+  category: 'web' | 'civil3d' | 'academic' | 'hobby';
+  title: string;
+}
+const { category, title } = Astro.props;
+
+const codes = { web: 'WEB', civil3d: 'C3D', academic: 'ACD', hobby: 'HBY' } as const;
+---
+
+<div class="bg-blueprint relative flex size-full items-end overflow-hidden p-4" aria-hidden="true">
+  <ContourBackground class="absolute inset-0 size-full" offset={(title.length * 37) % 100} />
+  <div class="relative flex w-full items-end justify-between gap-3 border-t border-line pt-3 font-mono text-[0.7rem] text-muted">
+    <span class="line-clamp-1 uppercase tracking-widest">{title}</span>
+    <span class="rounded border border-accent/40 bg-surface px-2 py-0.5 font-semibold text-accent">{codes[category]}</span>
+  </div>
+</div>

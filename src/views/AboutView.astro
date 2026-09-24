@@ -1,0 +1,98 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionLabel from '@/components/SectionLabel.astro';
+import Timeline from '@/components/Timeline.astro';
+import TechTag from '@/components/TechTag.astro';
+import Icon from '@/components/Icon.astro';
+import type { Locale } from '@/i18n/ui';
+import { localizePath, routeAlternates, useTranslations } from '@/i18n/utils';
+import { ABOUT } from '@/data/about';
+import { STACK_GROUPS } from '@/data/site';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const about = ABOUT[locale];
+---
+
+<BaseLayout
+  locale={locale}
+  title={t('about.title')}
+  description={t('about.metaDescription')}
+  current="about"
+  alternates={routeAlternates('about')}
+>
+  <section class="bg-blueprint border-b border-line">
+    <div class="container-page py-14 sm:py-20">
+      <SectionLabel index="01">{t('nav.about')}</SectionLabel>
+      <h1 class="mt-3 max-w-3xl text-4xl font-bold sm:text-5xl">{about.lead}</h1>
+      <div class="mt-6 max-w-2xl space-y-4 text-lg leading-relaxed text-muted">
+        {about.paragraphs.map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <div class="container-page grid gap-16 py-16 lg:grid-cols-2 lg:gap-12">
+    <section aria-labelledby="experiencia">
+      <SectionLabel index="02">{t('about.experience')}</SectionLabel>
+      <h2 id="experiencia" class="sr-only">{t('about.experience')}</h2>
+      <div class="mt-6"><Timeline items={about.experience} /></div>
+    </section>
+
+    <section aria-labelledby="formacao">
+      <SectionLabel index="03">{t('about.education')}</SectionLabel>
+      <h2 id="formacao" class="sr-only">{t('about.education')}</h2>
+      <div class="mt-6"><Timeline items={about.education} /></div>
+    </section>
+  </div>
+
+  <section aria-labelledby="stack" class="border-y border-line bg-surface">
+    <div class="container-page py-16">
+      <SectionLabel index="04">{t('about.stack')}</SectionLabel>
+      <h2 id="stack" class="sr-only">{t('about.stack')}</h2>
+      <dl class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          STACK_GROUPS[locale].map((g) => (
+            <div>
+              <dt class="mb-3 font-display font-semibold">{g.title}</dt>
+              <dd>
+                <ul class="flex flex-wrap gap-1.5">
+                  {g.items.map((i) => (
+                    <li>
+                      <TechTag>{i}</TechTag>
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <section aria-labelledby="interesses" class="container-page py-16">
+    <SectionLabel index="05">{t('about.interests')}</SectionLabel>
+    <h2 id="interesses" class="sr-only">{t('about.interests')}</h2>
+    <ul class="mt-8 grid gap-4 sm:grid-cols-2">
+      {
+        about.interests.map((i) => (
+          <li class="card p-5">
+            <h3 class="font-semibold">{i.title}</h3>
+            <p class="mt-1 text-sm leading-relaxed text-muted">{i.description}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="mt-12 flex flex-col gap-3 sm:flex-row">
+      <a href={localizePath('projects', locale)} class="btn btn-primary">
+        {t('hero.ctaProjects')}
+        <Icon name="arrow-right" size={18} />
+      </a>
+      <a href={localizePath('contact', locale)} class="btn btn-ghost">{t('hero.ctaContact')}</a>
+    </div>
+  </section>
+</BaseLayout>

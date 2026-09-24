@@ -1,0 +1,12 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import CaseStudyView from '@/views/CaseStudyView.astro';
+import { caseStudyPaths } from '@/lib/caseStudyPaths';
+
+export const getStaticPaths = (() => caseStudyPaths('en')) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { project, prev, next } = Astro.props as Props;
+---
+
+<CaseStudyView locale="en" project={project} prev={prev} next={next} />

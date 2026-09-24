@@ -1,0 +1,68 @@
+---
+import { LOCALE_META, LOCALES, DEFAULT_LOCALE, type Locale } from '@/i18n/ui';
+import type { Alternates } from '@/i18n/utils';
+import { SITE } from '@/data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  locale: Locale;
+  alternates?: Alternates;
+  /** Caminho absoluto (/og.png) ou URL de imagem já processada. */
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+}
+
+const { title, description, locale, alternates, image = SITE.ogImage, imageAlt, type = 'website', noindex = false } =
+  Astro.props;
+
+const site = Astro.site ?? new URL('https://jaminteles.vercel.app');
+const canonical = new URL(Astro.url.pathname, site).href;
+const imageUrl = new URL(image, site).href;
+const meta = LOCALE_META[locale];
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex" />}
+
+{
+  alternates &&
+    LOCALES.map((l) => <link rel="alternate" hreflang={LOCALE_META[l].htmlLang} href={new URL(alternates[l], site).href} />)
+}
+{alternates && <link rel="alternate" hreflang="x-default" href={new URL(alternates[DEFAULT_LOCALE], site).href} />}
+
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:image:alt" content={imageAlt ?? title} />
+<meta property="og:locale" content={meta.ogLocale} />
+{
+  LOCALES.filter((l) => l !== locale).map((l) => (
+    <meta property="og:locale:alternate" content={LOCALE_META[l].ogLocale} />
+  ))
+}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: SITE.name,
+    jobTitle: SITE.role,
+    worksFor: { '@type': 'Organization', name: SITE.company },
+    url: site.href,
+    sameAs: [SITE.github, SITE.linkedin],
+  })}
+/>

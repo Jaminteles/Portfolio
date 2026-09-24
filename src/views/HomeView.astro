@@ -1,0 +1,61 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import StackStrip from '@/components/StackStrip.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import SectionLabel from '@/components/SectionLabel.astro';
+import Icon from '@/components/Icon.astro';
+import type { Locale } from '@/i18n/ui';
+import { localizePath, routeAlternates, useTranslations } from '@/i18n/utils';
+import { getFeaturedProjects } from '@/lib/projects';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const featured = await getFeaturedProjects(locale);
+---
+
+<BaseLayout locale={locale} current="home" alternates={routeAlternates('home')}>
+  <Hero locale={locale} />
+  <StackStrip label={t('home.stackLabel')} />
+
+  <section aria-labelledby="featured-title" class="container-page py-20 sm:py-24">
+    <div class="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div class="max-w-2xl">
+        <SectionLabel index="01">{t('home.featuredLabel')}</SectionLabel>
+        <h2 id="featured-title" class="mt-3 text-3xl font-bold sm:text-4xl">{t('home.featuredTitle')}</h2>
+        <p class="mt-3 text-muted">{t('home.featuredIntro')}</p>
+      </div>
+      <a href={localizePath('projects', locale)} class="link-underline inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold">
+        {t('home.allProjects')}
+        <Icon name="arrow-right" size={16} />
+      </a>
+    </div>
+
+    <ul class="grid gap-6 md:grid-cols-2">
+      {
+        featured.map((project, i) => (
+          <li>
+            <ProjectCard project={project} locale={locale} variant="featured" priority={i === 0} />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="container-page">
+    <div class="card corner-marks bg-blueprint flex flex-col gap-6 px-6 py-10 sm:px-10 md:flex-row md:items-center md:justify-between">
+      <div class="max-w-xl">
+        <SectionLabel index="02">{t('nav.contact')}</SectionLabel>
+        <h2 class="mt-3 text-2xl font-bold sm:text-3xl">{t('home.ctaTitle')}</h2>
+        <p class="mt-2 text-muted">{t('home.ctaBody')}</p>
+      </div>
+      <a href={localizePath('contact', locale)} class="btn btn-primary shrink-0">
+        {t('hero.ctaContact')}
+        <Icon name="arrow-right" size={18} />
+      </a>
+    </div>
+  </section>
+</BaseLayout>

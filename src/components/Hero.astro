@@ -1,0 +1,95 @@
+---
+import type { Locale } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+import { SITE } from '@/data/site';
+import ContourBackground from './ContourBackground.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+/** "Carimbo" de prancha técnica com os dados principais. */
+const titleBlock =
+  locale === 'pt-br'
+    ? [
+        { k: 'Função', v: SITE.role },
+        { k: 'Empresa', v: SITE.company },
+        { k: 'Formação', v: 'Sistemas de Informação · IFBA' },
+        { k: 'Especialidade', v: 'Web + Automação Civil 3D' },
+      ]
+    : [
+        { k: 'Role', v: 'Full-Stack Developer' },
+        { k: 'Company', v: SITE.company },
+        { k: 'Education', v: 'Information Systems · IFBA' },
+        { k: 'Focus', v: 'Web + Civil 3D Automation' },
+      ];
+---
+
+<section class="bg-blueprint relative isolate overflow-hidden border-b border-line">
+  <ContourBackground class="absolute inset-0 -z-10 size-full" />
+  <div
+    class="absolute inset-0 -z-10 bg-gradient-to-r from-bg via-bg/85 to-bg/10 max-lg:bg-gradient-to-b max-lg:via-bg/80 max-lg:to-bg"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="container-page grid gap-12 py-16 sm:py-20 lg:grid-cols-[1.35fr_1fr] lg:items-center lg:py-28">
+    <div>
+      <p class="label-mono mb-6 flex flex-wrap items-center gap-x-3 gap-y-1">
+        <span class="inline-flex items-center gap-1.5">
+          <span class="relative flex size-2">
+            <span class="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-60 motion-reduce:hidden"></span>
+            <span class="relative inline-flex size-2 rounded-full bg-accent"></span>
+          </span>
+          {t('hero.kicker')}
+        </span>
+        <span class="text-muted" aria-hidden="true">/</span>
+        <span class="inline-flex items-center gap-1 text-muted"><Icon name="map-pin" size={13} />{t('hero.coords')}</span>
+      </p>
+
+      <h1 class="text-4xl leading-[1.05] font-bold sm:text-6xl lg:text-7xl">
+        <span class="block text-lg font-medium tracking-normal text-muted sm:text-xl">{t('hero.greeting')}</span>
+        {SITE.name}<span class="text-accent">.</span>
+      </h1>
+
+      <p class="mt-6 max-w-2xl font-display text-xl leading-snug font-medium sm:text-2xl">
+        {t('hero.tagline')}
+      </p>
+      <p class="mt-4 max-w-xl leading-relaxed text-muted">{t('hero.body')}</p>
+
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <a href={localizePath('projects', locale)} class="btn btn-primary">
+          {t('hero.ctaProjects')}
+          <Icon name="arrow-right" size={18} />
+        </a>
+        <a href={localizePath('contact', locale)} class="btn btn-ghost">
+          {t('hero.ctaContact')}
+        </a>
+      </div>
+    </div>
+
+    <aside class="card corner-marks hidden font-mono text-sm shadow-sm sm:block lg:justify-self-end" aria-label={SITE.name}>
+      <div class="flex items-center justify-between border-b border-line px-4 py-2.5 text-xs text-muted">
+        <span>PRANCHA 01/01</span>
+        <span>ESC 1:1</span>
+      </div>
+      <dl class="divide-y divide-line">
+        {
+          titleBlock.map(({ k, v }) => (
+            <div class="grid grid-cols-[7.5rem_1fr] gap-3 px-4 py-3">
+              <dt class="text-xs tracking-wider text-muted uppercase">{k}</dt>
+              <dd class="font-sans font-medium">{v}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <div class="flex items-center justify-between border-t border-line bg-surface-2/70 px-4 py-2.5 text-xs">
+        <span class="text-muted">REV.</span>
+        <span class="font-semibold text-accent">{new Date().getFullYear()}</span>
+      </div>
+    </aside>
+  </div>
+</section>

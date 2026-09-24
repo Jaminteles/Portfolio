@@ -1,0 +1,101 @@
+---
+import type { Locale } from '@/i18n/ui';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  locale: Locale;
+  /** Categorias exibidas como botões, na ordem desejada. */
+  categories: ('web' | 'civil3d' | 'academic' | 'hobby')[];
+  counts: Record<string, number>;
+  total: number;
+  /** id do contêiner que agrupa os cards a filtrar. */
+  target: string;
+}
+const { locale, categories, counts, total, target } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<div
+  role="group"
+  aria-label={t('projects.filterLabel')}
+  class="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] sm:flex-wrap"
+  data-project-filter
+  data-target={target}
+  data-empty-label={t('projects.empty')}
+>
+  <button type="button" data-filter="all" aria-pressed="true" class="filter-btn">
+    {t('projects.all')}
+    <span class="filter-count">{total}</span>
+  </button>
+  {
+    categories.map((c) => (
+      <button type="button" data-filter={c} aria-pressed="false" class="filter-btn">
+        {t(`category.${c}`)}
+        <span class="filter-count">{counts[c] ?? 0}</span>
+      </button>
+    ))
+  }
+</div>
+<p class="sr-only" aria-live="polite" data-filter-status></p>
+
+<style>
+  @reference '../styles/global.css';
+
+  .filter-btn {
+    @apply inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border border-line bg-surface px-4 text-sm font-medium whitespace-nowrap text-muted transition-colors hover:border-accent hover:text-ink;
+  }
+  .filter-btn[aria-pressed='true'] {
+    @apply border-ink bg-ink text-bg;
+  }
+  .filter-count {
+    @apply font-mono text-xs opacity-70;
+  }
+</style>
+
+<script>
+  const CATEGORIES = ['web', 'civil3d', 'academic', 'hobby'];
+
+  document.querySelectorAll<HTMLElement>('[data-project-filter]').forEach((group) => {
+    const container = document.getElementById(group.dataset.target ?? '');
+    if (!container) return;
+    const buttons = [...group.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const status = group.nextElementSibling as HTMLElement | null;
+    const sections = [...container.querySelectorAll<HTMLElement>('[data-filter-section]')];
+
+    const apply = (filter: string, updateUrl: boolean) => {
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === filter)));
+
+      let visible = 0;
+      container.querySelectorAll<HTMLElement>('[data-category]').forEach((card) => {
+        const show = filter === 'all' || card.dataset.category === filter;
+        const item = card.closest('li') ?? card;
+        item.hidden = !show;
+        if (show) visible++;
+      });
+
+      // Esconde seções inteiras (ex.: "Hobby") quando ficam vazias.
+      sections.forEach((s) => {
+        s.hidden = ![...s.querySelectorAll<HTMLElement>('[data-category]')].some(
+          (card) => !(card.closest('li') ?? card).hidden,
+        );
+      });
+
+      if (status) {
+        const label = buttons.find((b) => b.dataset.filter === filter)?.firstChild?.textContent?.trim() ?? '';
+        status.textContent = visible ? `${label}: ${visible}` : (group.dataset.emptyLabel ?? '');
+      }
+
+      if (updateUrl) {
+        const url = new URL(location.href);
+        if (filter === 'all') url.searchParams.delete('categoria');
+        else url.searchParams.set('categoria', filter);
+        history.replaceState(null, '', url);
+      }
+    };
+
+    buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filter ?? 'all', true)));
+
+    const initial = new URL(location.href).searchParams.get('categoria');
+    if (initial && CATEGORIES.includes(initial)) apply(initial, false);
+  });
+</script>

@@ -1,0 +1,256 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/* O tema escuro é controlado por data-theme="dark" no <html> (definido antes da pintura). */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* ---------------------------------------------------------------
+   Tokens de cor — "prancha técnica + laranja-obra"
+   Contraste conferido (WCAG AA) nos dois temas.
+---------------------------------------------------------------- */
+:root {
+  --c-bg: #f6f4ef; /* papel */
+  --c-surface: #ffffff;
+  --c-surface-2: #eeebe3;
+  --c-ink: #17191c; /* texto principal */
+  --c-muted: #55595f; /* texto secundário */
+  --c-line: #d9d4c8; /* bordas */
+  --c-grid: rgb(23 25 28 / 0.055); /* grade de fundo */
+  --c-contour: rgb(194 65 12 / 0.22); /* curvas de nível */
+  --c-accent: #c2410c; /* laranja-obra */
+  --c-accent-strong: #9a3412;
+  --c-accent-soft: #fdecdf;
+  --c-on-accent: #ffffff;
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --c-bg: #0f1113;
+  --c-surface: #16191c;
+  --c-surface-2: #1d2125;
+  --c-ink: #ecebe7;
+  --c-muted: #a3a7ad;
+  --c-line: #2c3136;
+  --c-grid: rgb(236 235 231 / 0.04);
+  --c-contour: rgb(251 146 60 / 0.2);
+  --c-accent: #fb923c;
+  --c-accent-strong: #fdba74;
+  --c-accent-soft: #2a1a0e;
+  --c-on-accent: #1a0d05;
+  color-scheme: dark;
+}
+
+/* Sem JS: segue a preferência do sistema. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --c-bg: #0f1113;
+    --c-surface: #16191c;
+    --c-surface-2: #1d2125;
+    --c-ink: #ecebe7;
+    --c-muted: #a3a7ad;
+    --c-line: #2c3136;
+    --c-grid: rgb(236 235 231 / 0.04);
+    --c-contour: rgb(251 146 60 / 0.2);
+    --c-accent: #fb923c;
+    --c-accent-strong: #fdba74;
+    --c-accent-soft: #2a1a0e;
+    --c-on-accent: #1a0d05;
+    color-scheme: dark;
+  }
+}
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Space Grotesk Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-surface-2: var(--c-surface-2);
+  --color-ink: var(--c-ink);
+  --color-muted: var(--c-muted);
+  --color-line: var(--c-line);
+  --color-accent: var(--c-accent);
+  --color-accent-strong: var(--c-accent-strong);
+  --color-accent-soft: var(--c-accent-soft);
+  --color-on-accent: var(--c-on-accent);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    @apply bg-bg font-sans text-ink antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display tracking-tight text-balance;
+  }
+
+  ::selection {
+    background: var(--c-accent);
+    color: var(--c-on-accent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--c-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+/* Grade de prancha técnica */
+@utility bg-blueprint {
+  background-image:
+    linear-gradient(var(--c-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--c-grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Rótulo tipo anotação de projeto: "// 01 — PROJETOS" */
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+
+@utility container-page {
+  @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+}
+
+@utility btn {
+  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold transition-colors duration-150;
+}
+
+@utility btn-primary {
+  @apply bg-accent text-on-accent hover:bg-accent-strong;
+}
+
+@utility btn-ghost {
+  @apply border border-line bg-surface text-ink hover:border-accent hover:text-accent;
+}
+
+@utility link-underline {
+  @apply underline decoration-accent/40 decoration-2 underline-offset-4 transition-colors hover:decoration-accent;
+}
+
+@utility card {
+  @apply rounded-lg border border-line bg-surface;
+}
+
+@layer components {
+  /* Marcas de canto de prancha */
+  .corner-marks {
+    position: relative;
+  }
+  .corner-marks::before,
+  .corner-marks::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: var(--c-accent);
+    pointer-events: none;
+  }
+  .corner-marks::before {
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid;
+    border-left: 2px solid;
+    border-top-left-radius: 8px;
+  }
+  .corner-marks::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 2px solid;
+    border-right: 2px solid;
+    border-bottom-right-radius: 8px;
+  }
+}
+
+/* Texto longo dos estudos de caso (usar junto com as classes `prose max-w-none`). */
+.prose-case {
+  counter-reset: case-section;
+  --tw-prose-body: var(--c-ink);
+  --tw-prose-headings: var(--c-ink);
+  --tw-prose-lead: var(--c-muted);
+  --tw-prose-links: var(--c-accent);
+  --tw-prose-bold: var(--c-ink);
+  --tw-prose-counters: var(--c-muted);
+  --tw-prose-bullets: var(--c-accent);
+  --tw-prose-hr: var(--c-line);
+  --tw-prose-quotes: var(--c-ink);
+  --tw-prose-quote-borders: var(--c-accent);
+  --tw-prose-captions: var(--c-muted);
+  --tw-prose-code: var(--c-ink);
+  --tw-prose-pre-code: #ecebe7;
+  --tw-prose-pre-bg: #16191c;
+  --tw-prose-th-borders: var(--c-line);
+  --tw-prose-td-borders: var(--c-line);
+}
+
+.prose-case h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--c-line);
+  font-family: var(--font-display);
+}
+
+.prose-case h2:first-child {
+  margin-top: 0;
+}
+
+.prose-case h2::before {
+  content: counter(case-section, decimal-leading-zero);
+  counter-increment: case-section;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--c-accent);
+}
+
+.prose-case h3 {
+  font-family: var(--font-display);
+}
+
+.prose-case :where(code):not(:where(pre *)) {
+  background: var(--c-surface-2);
+  border-radius: 0.25rem;
+  padding: 0.1em 0.35em;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.prose-case :where(code):not(:where(pre *))::before,
+.prose-case :where(code):not(:where(pre *))::after {
+  content: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

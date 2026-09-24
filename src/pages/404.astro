@@ -1,0 +1,29 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ContourBackground from '@/components/ContourBackground.astro';
+import SectionLabel from '@/components/SectionLabel.astro';
+import Icon from '@/components/Icon.astro';
+import { routeAlternates, useTranslations } from '@/i18n/utils';
+
+const t = useTranslations('pt-br');
+const en = useTranslations('en');
+---
+
+<BaseLayout locale="pt-br" title={t('404.title')} alternates={routeAlternates('home')} noindex>
+  <section class="bg-blueprint relative isolate overflow-hidden">
+    <ContourBackground class="absolute inset-0 -z-10 size-full" />
+    <div class="container-page py-24 sm:py-32">
+      <SectionLabel>Erro 404 · cota inexistente</SectionLabel>
+      <h1 class="mt-4 font-mono text-7xl font-bold text-accent sm:text-9xl">404</h1>
+      <p class="mt-4 text-2xl font-semibold">{t('404.title')}</p>
+      <p class="mt-2 max-w-md text-muted">{t('404.body')}</p>
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <a href="/" class="btn btn-primary">
+          <Icon name="arrow-left" size={18} />
+          {t('404.back')}
+        </a>
+        <a href="/en/" class="btn btn-ghost" hreflang="en" lang="en">{en('404.back')} (EN)</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,27 @@
+---
+/**
+ * Fundo de curvas de nível. O desenho vem de /contours.svg (gerado no build, ver src/lib/contours.ts)
+ * e é usado como máscara: a cor segue o token --c-contour de cada tema.
+ */
+interface Props {
+  class?: string;
+  /** Desloca o recorte para variar o desenho entre usos (0–100). */
+  offset?: number;
+}
+const { class: className = '', offset = 50 } = Astro.props;
+---
+
+<div
+  class:list={['contours pointer-events-none', className]}
+  style={`--contour-pos: ${offset}% 50%`}
+  aria-hidden="true"
+>
+</div>
+
+<style>
+  .contours {
+    background-color: var(--c-contour);
+    -webkit-mask: url('/contours.svg') var(--contour-pos) / cover no-repeat;
+    mask: url('/contours.svg') var(--contour-pos) / cover no-repeat;
+  }
+</style>

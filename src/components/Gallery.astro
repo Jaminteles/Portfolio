@@ -1,0 +1,64 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  images: { src: ImageMetadata; alt: string; caption?: string }[];
+  videos: { src: string; alt: string; caption?: string }[];
+}
+const { images, videos } = Astro.props;
+
+const isGif = (src: string) => src.toLowerCase().endsWith('.gif');
+const mime = (src: string) => (src.toLowerCase().endsWith('.webm') ? 'video/webm' : 'video/mp4');
+---
+
+<div class="grid items-start gap-6 sm:grid-cols-2">
+  {
+    videos.map((v) => (
+      <figure class="card overflow-hidden sm:col-span-2">
+        {isGif(v.src) ? (
+          <img src={v.src} alt={v.alt} loading="lazy" decoding="async" class="w-full" />
+        ) : (
+          <video
+            class="w-full"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            controls
+            aria-label={v.alt}
+          >
+            <source src={v.src} type={mime(v.src)} />
+          </video>
+        )}
+        {v.caption && <figcaption class="border-t border-line px-4 py-3 text-sm text-muted">{v.caption}</figcaption>}
+      </figure>
+    ))
+  }
+  {
+    images.map((img, i) => (
+      <figure class:list={['card overflow-hidden', images.length % 2 === 1 && i === 0 && 'sm:col-span-2']}>
+        <Image
+          src={img.src}
+          alt={img.alt}
+          widths={[480, 800, 1200]}
+          sizes="(min-width: 1024px) 720px, 100vw"
+          loading="lazy"
+          class="w-full"
+        />
+        {img.caption && <figcaption class="border-t border-line px-4 py-3 text-sm text-muted">{img.caption}</figcaption>}
+      </figure>
+    ))
+  }
+</div>
+
+<script>
+  // Respeita "reduzir movimento": vídeos não tocam sozinhos.
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll<HTMLVideoElement>('video[autoplay]').forEach((v) => {
+      v.autoplay = false;
+      v.pause();
+    });
+  }
+</script>

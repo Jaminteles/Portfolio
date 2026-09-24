@@ -1,0 +1,107 @@
+---
+import { Image } from 'astro:assets';
+import type { Locale } from '@/i18n/ui';
+import { projectPath, useTranslations } from '@/i18n/utils';
+import { projectSlug, type Project } from '@/lib/projects';
+import Icon from './Icon.astro';
+import TechTag from './TechTag.astro';
+import ProprietaryBadge from './ProprietaryBadge.astro';
+import CoverPlaceholder from './CoverPlaceholder.astro';
+
+interface Props {
+  project: Project;
+  locale: Locale;
+  /** "featured" = card grande com capa e link para o estudo de caso. */
+  variant?: 'featured' | 'compact';
+  headingLevel?: 'h2' | 'h3';
+  /** Carrega a capa com prioridade (primeiro card visível). */
+  priority?: boolean;
+}
+
+const { project, locale, variant = 'compact', headingLevel: Heading = 'h3', priority = false } = Astro.props;
+const t = useTranslations(locale);
+const { data } = project;
+const slug = projectSlug(project);
+const hasCaseStudy = data.featured;
+const href = hasCaseStudy ? projectPath(slug, locale) : (data.repo ?? data.demo);
+const external = !hasCaseStudy && !!href;
+const maxTags = variant === 'featured' ? 5 : 4;
+---
+
+<article
+  data-category={data.category}
+  class:list={[
+    'group card relative flex h-full flex-col overflow-hidden transition-[border-color,box-shadow,transform] duration-200',
+    href && 'hover:-translate-y-0.5 hover:border-accent/60 hover:shadow-[0_10px_30px_-15px_rgb(0_0_0/0.25)]',
+  ]}
+>
+  {
+    variant === 'featured' && (
+      <div class="relative aspect-[16/9] overflow-hidden border-b border-line bg-surface-2">
+        {data.cover ? (
+          <Image
+            src={data.cover}
+            alt={data.coverAlt ?? ''}
+            widths={[400, 640, 960]}
+            sizes="(min-width: 1024px) 560px, (min-width: 640px) 50vw, 100vw"
+            loading={priority ? 'eager' : 'lazy'}
+            fetchpriority={priority ? 'high' : 'auto'}
+            class="size-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+          />
+        ) : (
+          <CoverPlaceholder category={data.category} title={data.title} />
+        )}
+      </div>
+    )
+  }
+
+  <div class:list={['flex flex-1 flex-col', variant === 'featured' ? 'gap-4 p-5 sm:p-6' : 'gap-3 p-5']}>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-muted">
+      <span class="text-accent">{t(`category.${data.category}`)}</span>
+      {data.year && <span aria-hidden="true">·</span>}
+      {data.year && <span>{data.year}</span>}
+      {data.status && <span aria-hidden="true">·</span>}
+      {data.status && <span>{t(`status.${data.status}`)}</span>}
+    </div>
+
+    <Heading class:list={['font-display font-semibold leading-snug', variant === 'featured' ? 'text-xl sm:text-2xl' : 'text-lg']}>
+      {
+        href ? (
+          <a
+            href={href}
+            target={external ? '_blank' : undefined}
+            rel={external ? 'noopener noreferrer' : undefined}
+            class="outline-none after:absolute after:inset-0 after:rounded-lg focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-accent"
+          >
+            {data.title}
+            {external && <span class="sr-only">{t('a11y.newTab')}</span>}
+          </a>
+        ) : (
+          data.title
+        )
+      }
+    </Heading>
+
+    <p class="text-sm leading-relaxed text-muted sm:text-[0.95rem]">{data.summary}</p>
+
+    {data.proprietary && <div><ProprietaryBadge label={t('badge.proprietary')} /></div>}
+
+    <ul class="mt-auto flex flex-wrap gap-1.5 pt-2" aria-label={t('case.stack')}>
+      {data.stack.slice(0, maxTags).map((tech) => <li><TechTag>{tech}</TechTag></li>)}
+      {data.stack.length > maxTags && <li><TechTag>+{data.stack.length - maxTags}</TechTag></li>}
+    </ul>
+
+    {
+      href && (
+        <p class="flex items-center gap-1.5 text-sm font-semibold text-accent" aria-hidden="true">
+          {hasCaseStudy ? t('projects.caseStudy') : data.repo ? t('projects.repo') : t('projects.demo')}
+          <Icon
+            name={external ? 'arrow-up-right' : 'arrow-right'}
+            size={16}
+            class="transition-transform group-hover:translate-x-0.5"
+          />
+        </p>
+      )
+    }
+  </div>
+</article>

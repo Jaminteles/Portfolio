@@ -1,0 +1,35 @@
+---
+import { LOCALES, LOCALE_META, type Locale } from '@/i18n/ui';
+import type { Alternates } from '@/i18n/utils';
+
+interface Props {
+  locale: Locale;
+  alternates: Alternates;
+  label: string;
+}
+const { locale, alternates, label } = Astro.props;
+---
+
+<nav aria-label={label} class="inline-flex items-center rounded-md border border-line p-0.5 font-mono text-xs">
+  <ul class="flex">
+    {
+      LOCALES.map((l) => (
+        <li>
+          <a
+            href={alternates[l]}
+            hreflang={LOCALE_META[l].htmlLang}
+            lang={LOCALE_META[l].htmlLang}
+            aria-current={l === locale ? 'true' : undefined}
+            class:list={[
+              'inline-flex min-h-9 min-w-9 items-center justify-center rounded px-2 font-medium transition-colors',
+              l === locale ? 'bg-ink text-bg' : 'text-muted hover:text-ink',
+            ]}
+          >
+            <span aria-hidden="true">{LOCALE_META[l].short}</span>
+            <span class="sr-only">{LOCALE_META[l].label}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>

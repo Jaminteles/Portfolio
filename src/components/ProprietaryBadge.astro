@@ -1,0 +1,19 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  label: string;
+  size?: 'sm' | 'md';
+}
+const { label, size = 'sm' } = Astro.props;
+---
+
+<span
+  class:list={[
+    'inline-flex items-center gap-1.5 rounded-md border border-accent/35 bg-accent-soft font-medium text-accent-strong dark:text-accent',
+    size === 'sm' ? 'px-2.5 py-1 text-xs' : 'px-3.5 py-1.5 text-sm',
+  ]}
+>
+  <Icon name="lock" size={size === 'sm' ? 13 : 15} />
+  {label}
+</span>

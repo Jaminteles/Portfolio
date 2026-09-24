@@ -1,0 +1,100 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import ProjectFilter from '@/components/ProjectFilter.astro';
+import SectionLabel from '@/components/SectionLabel.astro';
+import type { Locale } from '@/i18n/ui';
+import { routeAlternates, useTranslations } from '@/i18n/utils';
+import { getProjects } from '@/lib/projects';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const all = await getProjects(locale);
+const featured = all.filter((p) => p.data.featured && p.data.category !== 'hobby');
+const others = all.filter((p) => !p.data.featured && p.data.category !== 'hobby');
+const hobby = all.filter((p) => p.data.category === 'hobby');
+
+const categories = ['web', 'civil3d', 'academic', 'hobby'] as const;
+const counts = Object.fromEntries(categories.map((c) => [c, all.filter((p) => p.data.category === c).length]));
+---
+
+<BaseLayout
+  locale={locale}
+  title={t('projects.title')}
+  description={t('projects.metaDescription')}
+  current="projects"
+  alternates={routeAlternates('projects')}
+>
+  <section class="bg-blueprint border-b border-line">
+    <div class="container-page py-14 sm:py-20">
+      <SectionLabel index="01">{t('nav.projects')}</SectionLabel>
+      <h1 class="mt-3 text-4xl font-bold sm:text-5xl">{t('projects.title')}</h1>
+      <p class="mt-4 max-w-2xl text-lg text-muted">{t('projects.intro')}</p>
+    </div>
+  </section>
+
+  <div class="container-page py-10 sm:py-14" id="project-list">
+    <div class="mb-8">
+      <ProjectFilter
+        locale={locale}
+        categories={categories.filter((c) => counts[c] > 0)}
+        counts={counts}
+        total={all.length}
+        target="project-list"
+      />
+    </div>
+
+    {
+      featured.length > 0 && (
+        <section data-filter-section aria-labelledby="featured-title">
+          <h2 id="featured-title" class="label-mono mb-5">{t('projects.featuredHeading')}</h2>
+          <ul class="grid gap-6 md:grid-cols-2">
+            {featured.map((project, i) => (
+              <li>
+                <ProjectCard project={project} locale={locale} variant="featured" priority={i === 0} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      others.length > 0 && (
+        <section data-filter-section aria-labelledby="others-title" class="mt-16">
+          <h2 id="others-title" class="label-mono mb-5">{t('projects.others')}</h2>
+          <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {others.map((project) => (
+              <li>
+                <ProjectCard project={project} locale={locale} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      hobby.length > 0 && (
+        <section data-filter-section aria-labelledby="hobby-title" class="mt-20 border-t border-dashed border-line pt-10">
+          <SectionLabel>{t('projects.hobbyLabel')}</SectionLabel>
+          <h2 id="hobby-title" class="mt-2 text-xl font-semibold">
+            {t('category.hobby')}
+          </h2>
+          <p class="mt-1 mb-6 text-sm text-muted">{t('projects.hobbyIntro')}</p>
+          <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {hobby.map((project) => (
+              <li>
+                <ProjectCard project={project} locale={locale} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </div>
+</BaseLayout>
