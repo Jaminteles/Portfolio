@@ -12,8 +12,8 @@ export const SITE = {
   githubUser: 'Jaminteles',
   linkedin: 'https://www.linkedin.com/in/jamintelesdevj',
   linkedinUser: 'jamintelesdevj',
-  /** Imagem padrão de preview (Open Graph), em /public. */
-  ogImage: '/og-default.png',
+  /** Imagem padrão de preview (Open Graph) por idioma, em /public (gerada por `npm run og`). */
+  ogImage: { 'pt-br': '/og-default.png', en: '/og-default-en.png' },
 } as const;
 
 /** Faixa de stack exibida na Home. */

@@ -21,7 +21,6 @@ export type RouteKey = keyof typeof ROUTES;
 /**
  * Textos da interface. O PT-BR é a fonte da verdade;
  * o EN precisa ter exatamente as mesmas chaves (o TypeScript garante).
- * Itens marcados com "TODO" ainda precisam de tradução revisada.
  */
 const ptBR = {
   'meta.title': 'Jamínteles Desus — Desenvolvedor Full-Stack',
@@ -134,7 +133,7 @@ export type UIKey = keyof typeof ptBR;
 const en: Record<UIKey, string> = {
   'meta.title': 'Jamínteles Desus — Full-Stack Developer',
   'meta.description':
-    'TODO: Portfolio of Jamínteles Desus, a full-stack developer who solves real business problems — from web systems to civil engineering automation in Civil 3D.',
+    'Portfolio of Jamínteles Desus, a full-stack developer who solves real business problems — from web systems to civil engineering automation in Civil 3D.',
 
   'a11y.skip': 'Skip to content',
   'a11y.menu': 'Menu',
@@ -152,31 +151,32 @@ const en: Record<UIKey, string> = {
 
   'hero.kicker': 'Full-Stack Developer',
   'hero.greeting': "Hi, I'm",
-  'hero.tagline': 'TODO: Full-stack dev who solves real business problems — even outside the software bubble.',
+  'hero.tagline': 'Full-stack dev who solves real business problems — even outside the software bubble.',
   'hero.body':
-    'TODO: I build end-to-end web systems and automate civil engineering in AutoCAD Civil 3D with AutoLISP.',
+    'I build end-to-end web systems and automate civil engineering work in AutoCAD Civil 3D with AutoLISP. Currently at Construtora Gil Ferreira, turning hours of manual work into minutes.',
   'hero.ctaProjects': 'See projects',
   'hero.ctaContact': 'Get in touch',
   'hero.coords': 'Vitória da Conquista · BA · Brazil',
 
   'home.featuredLabel': 'Featured projects',
-  'home.featuredTitle': 'TODO: Software running on the construction site',
-  'home.featuredIntro': 'TODO: A selection of systems and automations in real use.',
+  'home.featuredTitle': 'Software that runs on the construction site',
+  'home.featuredIntro': 'A selection of systems and automations in real use — from the warehouse to earthworks.',
   'home.allProjects': 'See all projects',
   'home.stackLabel': 'Core stack',
-  'home.ctaTitle': 'TODO: Got a problem that seems "outside IT"?',
-  'home.ctaBody': "TODO: That's exactly where I like to work. Let's talk.",
+  'home.ctaTitle': 'Got a problem that seems "outside IT"?',
+  'home.ctaBody': "That's exactly where I like to work. Let's talk.",
 
   'projects.title': 'Projects',
-  'projects.metaDescription': 'TODO: Projects by Jamínteles Desus.',
-  'projects.intro': 'TODO: Web systems, civil engineering automation and academic work.',
+  'projects.metaDescription':
+    'Projects by Jamínteles Desus: full-stack web systems, Civil 3D automation with AutoLISP, academic work and hobbies.',
+  'projects.intro': 'Web systems, civil engineering automation and academic work. Featured projects include a full case study.',
   'projects.filterLabel': 'Filter by category',
   'projects.all': 'All',
   'projects.empty': 'No projects in this category.',
   'projects.featuredHeading': 'Featured',
   'projects.others': 'Other projects',
   'projects.hobbyLabel': 'In my spare time',
-  'projects.hobbyIntro': 'TODO: Personal projects, made out of curiosity and fun.',
+  'projects.hobbyIntro': 'Personal projects, made out of curiosity and for fun.',
   'projects.caseStudy': 'Read case study',
   'projects.repo': 'Repository',
   'projects.demo': 'Demo',
@@ -209,15 +209,17 @@ const en: Record<UIKey, string> = {
   'case.toc': 'On this page',
 
   'about.title': 'About',
-  'about.metaDescription': 'TODO: Education, experience, stack and interests of Jamínteles Desus.',
+  'about.metaDescription':
+    'Education, experience, stack and interests of Jamínteles Desus, full-stack developer and Information Systems student at IFBA.',
   'about.education': 'Education',
   'about.experience': 'Experience',
   'about.stack': 'Stack',
   'about.interests': 'Interests',
 
   'contact.title': 'Contact',
-  'contact.metaDescription': 'TODO: Reach Jamínteles Desus via LinkedIn, GitHub or e-mail.',
-  'contact.intro': 'TODO: Open to full-stack developer opportunities and automation projects.',
+  'contact.metaDescription': 'Reach Jamínteles Desus on LinkedIn, GitHub or by e-mail.',
+  'contact.intro':
+    'Open to full-stack developer opportunities, automation projects and good conversations about technology applied to real business.',
   'contact.linkedin': "Let's connect",
   'contact.github': 'See my code',
   'contact.email': 'Send a message',
@@ -228,7 +230,7 @@ const en: Record<UIKey, string> = {
   'footer.rights': 'All rights reserved.',
 
   '404.title': 'Page not found',
-  '404.body': "TODO: Looks like this point isn't on the survey. How about going back home?",
+  '404.body': "Looks like this point isn't on the survey. How about heading back home?",
   '404.back': 'Back to home',
 };
 

@@ -9,9 +9,21 @@ const W = 1200;
 const H = 630;
 
 const TITLE = 'Jamínteles Desus';
-const ROLE = 'Desenvolvedor Full-Stack';
-const TAGLINE = ['Resolvo problemas reais de negócio —', 'inclusive fora da bolha do software.'];
-const FOOT = 'Web  ·  Automação Civil 3D  ·  AutoLISP';
+// Uma imagem por idioma: public/og-default.png (PT) e public/og-default-en.png (EN)
+const VERSIONS = [
+  {
+    out: 'public/og-default.png',
+    role: 'Desenvolvedor Full-Stack',
+    tagline: ['Resolvo problemas reais de negócio —', 'inclusive fora da bolha do software.'],
+    foot: 'Web  ·  Automação Civil 3D  ·  AutoLISP',
+  },
+  {
+    out: 'public/og-default-en.png',
+    role: 'Full-Stack Developer',
+    tagline: ['I solve real business problems —', 'even outside the software bubble.'],
+    foot: 'Web  ·  Civil 3D Automation  ·  AutoLISP',
+  },
+];
 
 // Curvas de nível (mesma ideia do hero do site)
 function ring(cx, cy, r, seed, i) {
@@ -37,6 +49,7 @@ const grid = [];
 for (let x = 0; x <= W; x += 40) grid.push(`<line x1="${x}" y1="0" x2="${x}" y2="${H}"/>`);
 for (let y = 0; y <= H; y += 40) grid.push(`<line x1="0" y1="${y}" x2="${W}" y2="${y}"/>`);
 
+for (const { out, role: ROLE, tagline: TAGLINE, foot: FOOT } of VERSIONS) {
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
   <rect width="${W}" height="${H}" fill="#0f1113"/>
   <g stroke="#ecebe7" stroke-opacity="0.045" stroke-width="1">${grid.join('')}</g>
@@ -53,5 +66,6 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
   </g>
 </svg>`;
 
-await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile('public/og-default.png');
-console.log('✔ public/og-default.png gerado');
+await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(out);
+console.log(`✔ ${out} gerado`);
+}

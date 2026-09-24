@@ -18,7 +18,6 @@ export interface AboutContent {
 
 /**
  * Conteúdo da página "Sobre".
- * Conteúdo em inglês marcado com TODO ainda precisa de tradução.
  */
 export const ABOUT: Record<Locale, AboutContent> = {
   'pt-br': {
@@ -69,17 +68,17 @@ export const ABOUT: Record<Locale, AboutContent> = {
     ],
   },
   en: {
-    lead: 'TODO: I am a full-stack developer who enjoys problems that do not fit into a single category.',
+    lead: "I'm a full-stack developer who enjoys problems that don't fit into a single category.",
     paragraphs: [
-      'TODO: translate — I work at Construtora Gil Ferreira, building end-to-end web systems and automating AutoCAD Civil 3D tasks with AutoLISP.',
-      'TODO: translate — I am also an Information Systems student at IFBA.',
+      'I work at Construtora Gil Ferreira, a construction company where software has to work in the real world: in the warehouse, in the engineering office and in earthwork design. There I build end-to-end web systems and automate repetitive AutoCAD Civil 3D tasks with AutoLISP.',
+      'Working alongside engineers, surveyors and warehouse staff taught me to start from the business problem, not the technology. I’m also pursuing a degree in Information Systems at IFBA (Federal Institute of Bahia), where I deepen fundamentals such as data modeling, algorithms and software engineering.',
     ],
     education: [
       {
         title: "Bachelor's in Information Systems",
-        org: 'IFBA — Vitória da Conquista Campus',
+        org: 'IFBA (Federal Institute of Bahia) — Vitória da Conquista Campus',
         period: '2024 – 2028 (expected)',
-        description: 'TODO: translate description.',
+        description: 'Coursework in software development, databases, requirements engineering and algorithm complexity.',
       },
     ],
     experience: [
@@ -87,18 +86,30 @@ export const ABOUT: Record<Locale, AboutContent> = {
         title: 'Full-Stack Developer',
         org: 'Construtora Gil Ferreira',
         period: '2025 – present',
-        description: 'TODO: translate description.',
+        description: 'Building internal systems and civil engineering automations, from requirements gathering to deployment.',
         highlights: [
-          'TODO: Warehouse management system in daily use (React + Node).',
-          'TODO: AutoLISP command suite for Civil 3D.',
+          'Warehouse management system in production: 3 warehouses and 60 users (React + Node).',
+          'AutoLISP command suite for Civil 3D that cut the time of earthwork tasks by 90%, used in more than 30 projects.',
         ],
       },
     ],
     interests: [
-      { title: 'Engineering automation', description: 'TODO: translate.' },
-      { title: 'Data modeling', description: 'TODO: translate.' },
-      { title: 'Product & usability', description: 'TODO: translate.' },
-      { title: 'Localization & ROM hacking', description: 'TODO: translate.' },
+      {
+        title: 'Engineering automation',
+        description: 'Turning manual CAD and surveying processes into fast, reliable routines.',
+      },
+      {
+        title: 'Data modeling',
+        description: 'Designing relational databases that follow the business rules — not the other way around.',
+      },
+      {
+        title: 'Product & usability',
+        description: 'Software that people outside IT can use without a manual.',
+      },
+      {
+        title: 'Localization & ROM hacking',
+        description: 'A hobby of translating games into Brazilian Portuguese and building the tools to do it.',
+      },
     ],
   },
 };

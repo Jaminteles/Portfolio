@@ -1,12 +1,12 @@
 ---
-title: Sistema Integrado de Gestão Empresarial e Financeira (ERP)
-summary: "TODO: translate — ERP com 18 módulos e 131 requisitos funcionais — do estoque à contabilidade —, com banco PostgreSQL modelado do zero, isolamento multiempresa e trilha de auditoria."
+title: Integrated Business & Financial Management System (ERP)
+summary: An ERP with 18 modules and 131 functional requirements — from inventory to accounting — built on a PostgreSQL database designed from scratch, with multi-company isolation and an audit trail.
 category: web
 featured: true
 order: 3
 status: concluido
 year: '2026'
-role: 'TODO: translate role'
+role: Personal solo project — data modeling, back end and front end
 stack:
   - PostgreSQL
   - NestJS
@@ -19,23 +19,35 @@ stack:
 proprietary: false
 repo: https://github.com/Jaminteles/SGE
 cover: ../../../assets/projects/erp-gestao-empresarial/capa.png
-coverAlt: Tela inicial do ERP no tema escuro com contas a pagar e a receber, saldo em caixa, gráficos de fluxo previsto e inadimplência e lista de pendências
+coverAlt: ERP home screen in dark mode showing payables and receivables, cash balance, charts of projected cash flow and overdue accounts, and a list of pending items
 ---
-
-<!-- TODO: translate the case study from ../pt-br/erp-gestao-empresarial.md (keep these four headings). -->
 
 ## Problem
 
-TODO: translate.
+A personal project, built alone from requirements gathering to the interface. The motivation: small and medium businesses often run purchasing, inventory, finance and accounting in separate tools, which means retyping data, numbers that don't reconcile between departments and little traceability of who changed what. The challenge was to design a single system covering that whole cycle **without compromising data consistency**.
 
 ## Solution
 
-TODO: translate.
+A web ERP with **18 modules** and **131 functional requirements** (FR-001 to FR-131), specified in a requirements document and delivered over **32 sprints**:
+
+- **Core, HR, partners and inventory** — master data, employment history, inventory ledger with weighted average cost.
+- **Purchasing and tax documents** — orders, receipts, discrepancies and invoice processing.
+- **Finance, banking and reconciliation** — payables/receivables and installments, payment orders, rule-based reconciliation.
+- **Accounting and tax** — chart of accounts, double-entry bookkeeping, trial balance, income statement and period-based tax calculation.
+- **Cash flow, OCR, notifications, reports and integrations.**
+
+The interface has **74 screens** designed in Figma and built with Angular + PrimeNG, with light and dark themes.
 
 ## Technical decisions
 
-TODO: translate.
+- **A database designed from scratch — and it's the source of truth.** The PostgreSQL physical model (`gestao` schema) holds the critical rules: domains, *enums*, *constraints* and *triggers*. For example: inventory can never go negative, installments always add up to the total, and every journal entry is balanced.
+- **Multi-company with Row-Level Security (RLS).** Isolation between companies is enforced by PostgreSQL itself, not just by API filters: a forgotten `WHERE` clause can't leak data.
+- **Append-only tables and trigger-based audit trail** for inventory movements, payments and journal entries: mistakes are fixed with reversals, never by deleting.
+- **State machines in the database** for tax documents, payment orders and OCR reads, preventing invalid transitions.
+- **NestJS + Prisma** on the back end, with the API documented in Swagger (`/api/docs`).
+- **Continuous quality:** E2E tests for critical flows, multi-company isolation tests, 55 front-end test files (Vitest), an accessibility audit and a CI pipeline.
 
 ## Result
 
-TODO: translate.
+- **18 modules and 131 requirements** implemented, with both back end and interface complete.
+- User manual, user acceptance testing (UAT) script and go-live checklist documented.

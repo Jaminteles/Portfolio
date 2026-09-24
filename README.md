@@ -22,7 +22,7 @@ Outros comandos:
 | `npm run build` | Checa os tipos (`astro check`) e gera o site em `dist/` |
 | `npm run preview` | Serve o `dist/` localmente, como vai ficar em produção |
 | `npm run check` | Só a checagem de tipos e do frontmatter |
-| `npm run og` | Regera `public/og-default.png` (imagem de preview dos links) |
+| `npm run og` | Regera as imagens de preview dos links (`public/og-default.png` e `og-default-en.png`) |
 
 ## 2. Adicionar um projeto
 
@@ -126,5 +126,5 @@ src/
 
 - **Cores:** edite os tokens em `src/styles/global.css` (`--c-accent` é o laranja-obra).
 - **Textos da interface:** `src/i18n/ui.ts`. O TypeScript obriga o EN a ter as mesmas chaves do PT.
-- **Tradução EN:** procure por `TODO` em `src/i18n/ui.ts`, `src/data/about.ts` e `src/content/projects/en/`.
+- **Inglês:** ao editar um texto em PT, atualize também o equivalente em `src/i18n/ui.ts`, `src/data/about.ts` ou `src/content/projects/en/`.
 - **Placeholders:** procure por `[PREENCHER` e `[CONFIRMAR` no projeto.
