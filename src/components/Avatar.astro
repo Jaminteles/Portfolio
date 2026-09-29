@@ -1,0 +1,59 @@
+---
+/**
+ * Foto de perfil. A imagem é opcional: salve o arquivo em
+ * `src/assets/perfil.jpg` (aceita .jpeg/.png/.webp/.avif) e ela aparece
+ * automaticamente. Sem o arquivo, exibe um avatar com as iniciais.
+ */
+import { Image } from 'astro:assets';
+import { SITE } from '@/data/site';
+
+interface Props {
+  /** Largura em que a imagem é gerada — use ~2x o tamanho exibido (retina). */
+  render?: number;
+  /** Define o tamanho da caixa (`size-*` do Tailwind) e efeitos extras. */
+  class?: string;
+  /** Use na foto acima da dobra para não atrasar o carregamento. */
+  eager?: boolean;
+}
+const { render = 192, class: className = 'size-24', eager = false } = Astro.props;
+
+const found = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/perfil.{jpg,jpeg,png,webp,avif}',
+  { eager: true },
+);
+const photo = Object.values(found)[0]?.default;
+
+const initials = SITE.name
+  .split(/\s+/)
+  .map((word) => word[0])
+  .join('')
+  .slice(0, 2)
+  .toUpperCase();
+---
+
+<div
+  class:list={[
+    '@container relative shrink-0 overflow-hidden rounded-full border border-line bg-surface-2',
+    className,
+  ]}
+>
+  {
+    photo ? (
+      <Image
+        src={photo}
+        alt={`${SITE.name}, ${SITE.role}`}
+        width={render}
+        loading={eager ? 'eager' : 'lazy'}
+        class="size-full object-cover"
+      />
+    ) : (
+      <span
+        class="flex size-full items-center justify-center font-display text-[34cqw] font-bold tracking-tight text-muted"
+        role="img"
+        aria-label={SITE.name}
+      >
+        {initials}
+      </span>
+    )
+  }
+</div>

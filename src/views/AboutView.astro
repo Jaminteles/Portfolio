@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import Avatar from '@/components/Avatar.astro';
 import SectionLabel from '@/components/SectionLabel.astro';
 import Timeline from '@/components/Timeline.astro';
 import TechTag from '@/components/TechTag.astro';
@@ -7,7 +8,7 @@ import Icon from '@/components/Icon.astro';
 import type { Locale } from '@/i18n/ui';
 import { localizePath, routeAlternates, useTranslations } from '@/i18n/utils';
 import { ABOUT } from '@/data/about';
-import { STACK_GROUPS } from '@/data/site';
+import { SITE, STACK_GROUPS } from '@/data/site';
 
 interface Props {
   locale: Locale;
@@ -25,12 +26,18 @@ const about = ABOUT[locale];
   alternates={routeAlternates('about')}
 >
   <section class="bg-blueprint border-b border-line">
-    <div class="container-page py-14 sm:py-20">
-      <SectionLabel index="01">{t('nav.about')}</SectionLabel>
-      <h1 class="mt-3 max-w-3xl text-4xl font-bold sm:text-5xl">{about.lead}</h1>
-      <div class="mt-6 max-w-2xl space-y-4 text-lg leading-relaxed text-muted">
-        {about.paragraphs.map((p) => <p>{p}</p>)}
+    <div class="container-page grid gap-10 py-14 sm:py-20 lg:grid-cols-[1fr_auto] lg:items-start lg:gap-14">
+      <div>
+        <SectionLabel index="01">{t('nav.about')}</SectionLabel>
+        <h1 class="mt-3 max-w-3xl text-4xl font-bold sm:text-5xl">{about.lead}</h1>
+        <div class="mt-6 max-w-2xl space-y-4 text-lg leading-relaxed text-muted">
+          {about.paragraphs.map((p) => <p>{p}</p>)}
+        </div>
       </div>
+      <figure class="flex flex-col items-center gap-3 lg:order-last lg:pt-10">
+        <Avatar class="size-36 shadow-sm sm:size-44 lg:size-56" render={448} eager />
+        <figcaption class="label-mono max-w-56 text-center text-muted">{SITE.name} · {SITE.location}</figcaption>
+      </figure>
     </div>
   </section>
 

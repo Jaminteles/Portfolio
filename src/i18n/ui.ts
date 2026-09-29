@@ -121,6 +121,7 @@ const ptBR = {
   'contact.copied': 'E-mail copiado!',
 
   'footer.built': 'Feito com Astro e Tailwind CSS.',
+  'footer.views': 'visualizações',
   'footer.rights': 'Todos os direitos reservados.',
 
   '404.title': 'Página não encontrada',
@@ -227,6 +228,7 @@ const en: Record<UIKey, string> = {
   'contact.copied': 'E-mail copied!',
 
   'footer.built': 'Built with Astro and Tailwind CSS.',
+  'footer.views': 'views',
   'footer.rights': 'All rights reserved.',
 
   '404.title': 'Page not found',

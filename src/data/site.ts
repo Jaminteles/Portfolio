@@ -12,6 +12,11 @@ export const SITE = {
   githubUser: 'Jaminteles',
   linkedin: 'https://www.linkedin.com/in/jamintelesdevj',
   linkedinUser: 'jamintelesdevj',
+  /**
+   * Contador público de visualizações (Abacus — abacus.jasoncameron.dev).
+   * O par namespace/key identifica o contador; mudar reinicia a contagem do zero.
+   */
+  viewCounter: { namespace: 'jaminteles-portfolio-a7f3', key: 'total' },
   /** Imagem padrão de preview (Open Graph) por idioma, em /public (gerada por `npm run og`). */
   ogImage: { 'pt-br': '/og-default.png', en: '/og-default-en.png' },
 } as const;

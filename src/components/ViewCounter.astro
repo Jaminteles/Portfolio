@@ -1,0 +1,77 @@
+---
+/**
+ * Contador público de visualizações.
+ *
+ * O site é estático, então a contagem fica no Abacus
+ * (https://abacus.jasoncameron.dev) — API gratuita e sem cadastro.
+ * Regras: 1 visita por sessão do navegador (`/hit`); nas outras páginas da
+ * mesma sessão apenas lê o total (`/get`). Em localhost nunca incrementa.
+ * Se a API falhar, o bloco simplesmente não aparece.
+ */
+import type { Locale } from '@/i18n/ui';
+import { LOCALE_META } from '@/i18n/ui';
+import { useTranslations } from '@/i18n/utils';
+import { SITE } from '@/data/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  locale: Locale;
+  class?: string;
+}
+const { locale, class: className = '' } = Astro.props;
+const t = useTranslations(locale);
+const { namespace, key } = SITE.viewCounter;
+---
+
+<p
+  class:list={['flex items-center gap-1.5 font-mono text-xs text-muted', className]}
+  data-view-counter
+  data-namespace={namespace}
+  data-counter-key={key}
+  data-number-locale={LOCALE_META[locale].htmlLang}
+  hidden
+>
+  <Icon name="eye" size={14} />
+  <span class="font-semibold text-ink" data-view-count>—</span>
+  <span>{t('footer.views')}</span>
+</p>
+
+<script>
+  const API = 'https://abacus.jasoncameron.dev';
+  const SESSION_KEY = 'portfolio:counted';
+
+  /** Só conta uma vez por sessão, e nunca durante o desenvolvimento local. */
+  function shouldCount() {
+    const { hostname } = window.location;
+    if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]') return false;
+    try {
+      if (sessionStorage.getItem(SESSION_KEY)) return false;
+      sessionStorage.setItem(SESSION_KEY, '1');
+      return true;
+    } catch {
+      // Sem sessionStorage (aba privada, cookies bloqueados): apenas lê o total.
+      return false;
+    }
+  }
+
+  async function render(el: HTMLElement) {
+    const { namespace, counterKey, numberLocale } = el.dataset;
+    if (!namespace || !counterKey) return;
+
+    const endpoint = shouldCount() ? 'hit' : 'get';
+    try {
+      const res = await fetch(`${API}/${endpoint}/${namespace}/${counterKey}`);
+      if (!res.ok) return;
+      const { value } = (await res.json()) as { value: number };
+      if (typeof value !== 'number') return;
+
+      const output = el.querySelector('[data-view-count]');
+      if (output) output.textContent = new Intl.NumberFormat(numberLocale).format(value);
+      el.hidden = false;
+    } catch {
+      // Offline ou API fora do ar: mantém o contador escondido.
+    }
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-view-counter]').forEach(render);
+</script>

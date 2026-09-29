@@ -80,7 +80,27 @@ Projetos com `featured: false` aparecem só como card na listagem. O card aponta
 - Proporção recomendada para a capa: **16:9** (ex.: 1600×900).
 - Há exemplos comentados no frontmatter de cada projeto; é só descomentar.
 
-## 4. Publicar na Vercel
+## 4. Foto de perfil
+
+Salve a sua foto em **`src/assets/perfil.jpg`** (aceita `.jpeg`, `.png`, `.webp` e `.avif`).
+Ela aparece sozinha na Home (ao lado do nome) e na página Sobre — sem mexer em código.
+
+- Formato: **quadrada**, a partir de 600×600 px. A imagem é cortada em círculo, então deixe o rosto centralizado.
+- Enquanto o arquivo não existir, o site mostra um avatar com as iniciais — nada quebra.
+- Para trocar a foto, basta substituir o arquivo.
+
+## 5. Contador de visualizações
+
+O número no rodapé vem do [Abacus](https://abacus.jasoncameron.dev), uma API pública e gratuita
+(o site é estático, então a contagem precisa morar fora dele). Não há cadastro nem chave no código.
+
+- Conta **uma visita por sessão** do navegador; as outras páginas da mesma sessão apenas leem o total.
+- Acessos em `localhost` **não** contam.
+- Se a API estiver fora do ar, o contador simplesmente não aparece.
+- O identificador do contador fica em `viewCounter` no `src/data/site.ts`. Mudar o `namespace`
+  cria um contador novo (a contagem recomeça do zero).
+
+## 6. Publicar na Vercel
 
 ### Primeiro deploy
 
@@ -115,6 +135,7 @@ src/
 ├─ content/projects/{pt-br,en}/   # um .md por projeto e idioma
 ├─ content.config.ts              # schema (tipos) do frontmatter
 ├─ assets/projects/<slug>/        # imagens otimizadas
+├─ assets/perfil.jpg              # sua foto de perfil (opcional)
 ├─ data/site.ts                   # nome, e-mail, links, stack
 ├─ data/about.ts                  # conteúdo da página Sobre
 ├─ i18n/ui.ts                     # textos da interface e rotas por idioma
