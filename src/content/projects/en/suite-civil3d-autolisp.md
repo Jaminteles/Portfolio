@@ -1,6 +1,6 @@
 ---
 title: Civil 3D Automation Suite
-summary: A set of AutoLISP commands that automates repetitive earthwork design tasks in AutoCAD Civil 3D — from volume calculation to profile grades and rock lines. Cut the time spent on these tasks by 90%.
+summary: Custom tools for AutoCAD Civil 3D — AutoLISP commands and a C# .NET plugin — that automate repetitive surveying and design tasks, from field survey data to plotting cross-sections. Cut the time spent on these tasks by 90%.
 category: civil3d
 featured: true
 order: 2
@@ -9,8 +9,9 @@ role: Developer (solo project)
 stack:
   - AutoLISP
   - Visual LISP / ActiveX
+  - C# / .NET Framework
+  - Civil 3D .NET API
   - AutoCAD Civil 3D
-  - Computational geometry
 proprietary: true
 metric:
   label: Time spent on automated tasks
@@ -22,23 +23,26 @@ coverAlt: Road project in Civil 3D showing the roadway, hatched paved areas, rip
 
 ## Problem
 
-In earthwork design, much of the technical team's time went into **manual** tasks in Civil 3D: measuring areas section by section, clipping surfaces, redrawing the profile as tangents and drawing the rock line. Besides being slow, the manual process left room for human error in numbers that turn into volume, cost and project schedule.
+In day-to-day design work, much of the technical team's time went into **manual** tasks in Civil 3D: connecting field survey points one by one to draw access roads, annotating and tabulating cross-sections one at a time, redrawing the profile as tangents, clipping surfaces and adjusting each section's elevation range by hand before plotting. Besides being slow, this repetitive work left room for human error in drawings that turn into quantities, cost and project schedule.
 
 ## Solution
 
-A **suite of AutoLISP commands** loaded straight into Civil 3D, which the designer runs from the command line like any native tool:
+A **suite of tools** loaded straight into Civil 3D, which the designer runs from the command line like any native command:
 
 | Command | What it does |
 | --- | --- |
-| `AreaSecoes` | Calculates cut and fill areas for each **cross-section** and consolidates earthwork volumes. |
-| `CMALHA` | **Clips the surface/grid** to the boundary of selected polylines. |
+| `PONTOS_ACESSO_LV` | Draws **access roads from survey points**: connects centerline and left/right edge points into 3D polylines, in survey order. |
+| `HTxt` (Annotate) | **Annotates cross-sections**: identifies fill and cut hatches by layer, writes the values into the drawing and exports everything by station to a spreadsheet-ready TXT file. |
 | `TANGREIDE` | Converts a **smooth profile grade** into **tangent segments with PVIs**, ready for the design profile. |
-| `NROCHA` | Generates a **new rock line** across the sections. |
+| `CMALHA` | **Clips the surface/grid** to the boundary of selected polylines. |
+| `SVFIT` (.NET) | **Prepares sections for plotting**: adjusts the elevation range of every selected *Section View* at once, with padding, rounding and a minimum height. Comes with `SVAUTO` and `SVINFO`. |
 
 ## Technical decisions
 
-- **AutoLISP instead of a .NET plugin.** It runs on any workstation with Civil 3D — no installation, no compilation, no admin rights. For a construction company, easy distribution mattered more than raw performance.
-- **Geometry handled inside the drawing itself.** The commands read polylines, sections and surfaces through Visual LISP/ActiveX and write results back as CAD objects, so designers stay in the workflow they already know.
+- **AutoLISP for most commands.** It runs on any workstation with Civil 3D — no installation, no compilation, no admin rights. For a construction company, easy distribution mattered more than raw performance.
+- **A C# .NET plugin where LISP falls short.** Section View elevation ranges are controlled through the Civil 3D .NET API, so `SVFIT` is written in C#. It works in two transactions: first it lets Civil 3D recalculate each section's real range, then it applies padding and rounding and forces even elevations, so every section comes out with the same visual scale on the sheet.
+- **Field rules built into the code.** `PONTOS_ACESSO_LV` uses only points described as `EIX` for the centerline and breaks the line when two consecutive points are more than 25 m apart, so separate stretches never get joined.
+- **Validation before writing to the drawing.** Annotate checks object types and layers, handles clicks on empty space without aborting and cancels the annotation when there are no values, keeping junk out of both the drawing and the exported file.
 - **One tool per task.** Each command solves a well-defined step of the project, which keeps the suite easy to learn and to extend one command at a time.
 
 ## Result

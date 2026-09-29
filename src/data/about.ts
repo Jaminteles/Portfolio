@@ -44,7 +44,7 @@ export const ABOUT: Record<Locale, AboutContent> = {
           'Desenvolvimento de sistemas internos e automações para engenharia civil, do levantamento de requisitos à implantação.',
         highlights: [
           'Sistema de gestão de almoxarifado em produção: 3 almoxarifados e 60 usuários (React + Node).',
-          'Suíte de comandos AutoLISP para Civil 3D que reduziu em 90% o tempo de tarefas de terraplenagem, usada em mais de 30 projetos.',
+          'Suíte de comandos AutoLISP para Civil 3D e plugin .NET que reduziram em 90% o tempo de tarefas de projeto, usados em mais de 30 projetos.',
         ],
       },
     ],
@@ -89,7 +89,7 @@ export const ABOUT: Record<Locale, AboutContent> = {
         description: 'Building internal systems and civil engineering automations, from requirements gathering to deployment.',
         highlights: [
           'Warehouse management system in production: 3 warehouses and 60 users (React + Node).',
-          'AutoLISP command suite for Civil 3D that cut the time of earthwork tasks by 90%, used in more than 30 projects.',
+          'AutoLISP command suite and .NET plugin for Civil 3D that cut the time of design tasks by 90%, used in more than 30 projects.',
         ],
       },
     ],
