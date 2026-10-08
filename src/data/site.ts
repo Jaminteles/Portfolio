@@ -12,6 +12,13 @@ export const SITE = {
   githubUser: 'Jaminteles',
   linkedin: 'https://www.linkedin.com/in/jamintelesdevj',
   linkedinUser: 'jamintelesdevj',
+  /** WhatsApp em formato internacional, apenas dígitos (DDI + DDD + número). */
+  whatsapp: '5577998544432',
+  /**
+   * Currículo em PDF por idioma, servido de /public/cv.
+   * Para atualizar, substitua os arquivos mantendo exatamente estes nomes.
+   */
+  resume: { 'pt-br': '/cv/curriculo-jaminteles-desus.pdf', en: '/cv/resume-jaminteles-desus.pdf' },
   /**
    * Contador público de visualizações (Abacus — abacus.jasoncameron.dev).
    * O par namespace/key identifica o contador; mudar reinicia a contagem do zero.

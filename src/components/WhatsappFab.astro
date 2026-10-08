@@ -1,0 +1,29 @@
+---
+/**
+ * Botão flutuante de WhatsApp (canto inferior direito, em todas as páginas).
+ * Verde da marca em vez do laranja do site, para leitura imediata do ícone.
+ */
+import type { Locale } from '@/i18n/ui';
+import { useTranslations } from '@/i18n/utils';
+import { SITE } from '@/data/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const href = `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(t('whatsapp.message'))}`;
+---
+
+<a
+  href={href}
+  target="_blank"
+  rel="noopener noreferrer"
+  class="fixed right-4 bottom-4 z-40 grid size-14 place-items-center rounded-full text-white shadow-lg transition-transform duration-150 hover:scale-105 sm:right-6 sm:bottom-6"
+  style="background-color:#25d366"
+  aria-label={`${t('whatsapp.label')} ${t('a11y.newTab')}`}
+>
+  <Icon name="whatsapp" size={28} />
+</a>

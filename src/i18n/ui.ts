@@ -109,6 +109,7 @@ const ptBR = {
   'about.experience': 'Experiência',
   'about.stack': 'Stack',
   'about.interests': 'Interesses',
+  'about.downloadCv': 'Baixar currículo (PDF)',
 
   'contact.title': 'Contato',
   'contact.metaDescription': 'Fale com Jamínteles Desus por LinkedIn, GitHub ou e-mail.',
@@ -119,6 +120,9 @@ const ptBR = {
   'contact.email': 'Mande uma mensagem',
   'contact.copy': 'Copiar e-mail',
   'contact.copied': 'E-mail copiado!',
+
+  'whatsapp.label': 'Conversar no WhatsApp',
+  'whatsapp.message': 'Olá, Jamínteles! Vi seu portfólio e gostaria de conversar.',
 
   'footer.built': 'Feito com Astro e Tailwind CSS.',
   'footer.views': 'visualizações',
@@ -216,6 +220,7 @@ const en: Record<UIKey, string> = {
   'about.experience': 'Experience',
   'about.stack': 'Stack',
   'about.interests': 'Interests',
+  'about.downloadCv': 'Download résumé (PDF)',
 
   'contact.title': 'Contact',
   'contact.metaDescription': 'Reach Jamínteles Desus on LinkedIn, GitHub or by e-mail.',
@@ -226,6 +231,9 @@ const en: Record<UIKey, string> = {
   'contact.email': 'Send a message',
   'contact.copy': 'Copy e-mail',
   'contact.copied': 'E-mail copied!',
+
+  'whatsapp.label': 'Chat on WhatsApp',
+  'whatsapp.message': "Hi, Jamínteles! I saw your portfolio and I'd like to talk.",
 
   'footer.built': 'Built with Astro and Tailwind CSS.',
   'footer.views': 'views',

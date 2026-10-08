@@ -33,6 +33,10 @@ const about = ABOUT[locale];
         <div class="mt-6 max-w-2xl space-y-4 text-lg leading-relaxed text-muted">
           {about.paragraphs.map((p) => <p>{p}</p>)}
         </div>
+        <a href={SITE.resume[locale]} download class="btn btn-ghost mt-8">
+          <Icon name="download" size={18} />
+          {t('about.downloadCv')}
+        </a>
       </div>
       <figure class="flex flex-col items-center gap-3 lg:order-last lg:pt-10">
         <Avatar class="size-36 shadow-sm sm:size-44 lg:size-56" render={448} eager />
